@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de Operaciones Matemáticas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb);
+      background-size: 400% 400%;
+      animation: gradient 10s ease infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 26px;
+    }
+
+    select, input, button {
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    button {
+      background: linear-gradient(45deg, #89f7fe, #66a6ff);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #66a6ff, #89f7fe);
+    }
+
+    .operacion {
+      font-size: 32px;
+      margin: 20px 0;
+      color: #555;
+      transition: all 0.3s ease;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧮 Juego de Operaciones</h1>
+
+    <label>Dificultad:</label>
+    <select id="dificultad">
+      <option value="facil">Fácil</option>
+      <option value="medio">Medio</option>
+      <option value="dificil">Difícil</option>
+    </select>
+
+    <label>Operación:</label>
+    <select id="operacion">
+      <option value="suma">Suma (+)</option>
+      <option value="resta">Resta (-)</option>
+      <option value="multiplicacion">Multiplicación (×)</option>
+      <option value="division">División (÷)</option>
+    </select>
+
+    <button onclick="generarOperacion()">🎲 Nueva Operación</button>
+
+    <div class="operacion" id="operacionTexto"></div>
+
+    <input type="number" id="respuesta" placeholder="Tu respuesta">
+    <button onclick="verificarRespuesta()">✅ Verificar</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    let num1, num2, respuestaCorrecta;
+
+    function generarOperacion() {
+      let dificultad = document.getElementById("dificultad").value;
+      let operacion = document.getElementById("operacion").value;
+
+      let rangoMin, rangoMax;
+
+      if (dificultad === "facil") {
+        rangoMin = 1;
+        rangoMax = 9;
+      } else if (dificultad === "medio") {
+        rangoMin = 100;
+        rangoMax = 999;
+      } else {
+        rangoMin = 1000;
+        rangoMax = 9999;
+      }
+
+      num1 = Math.floor(Math.random() * (rangoMax - rangoMin + 1)) + rangoMin;
+      num2 = Math.floor(Math.random() * (rangoMax - rangoMin + 1)) + rangoMin;
+
+      // Evitar división por 0
+      if (operacion === "division" && num2 === 0) num2 = 1;
+
+      let simbolo;
+      switch (operacion) {
+        case "suma":
+          respuestaCorrecta = num1 + num2;
+          simbolo = "+";
+          break;
+        case "resta":
+          respuestaCorrecta = num1 - num2;
+          simbolo = "-";
+          break;
+        case "multiplicacion":
+          respuestaCorrecta = num1 * num2;
+          simbolo = "×";
+          break;
+        case "division":
+          respuestaCorrecta = parseFloat((num1 / num2).toFixed(2));
+          simbolo = "÷";
+          break;
+      }
+
+      document.getElementById("operacionTexto").textContent = `${num1} ${simbolo} ${num2} = ?`;
+      document.getElementById("resultado").textContent = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function verificarRespuesta() {
+      let respuestaUsuario = parseFloat(document.getElementById("respuesta").value);
+      if (respuestaUsuario === respuestaCorrecta) {
+        document.getElementById("resultado").textContent = "✅ ¡Correcto!";
+        document.getElementById("resultado").style.color = "green";
+      } else {
+        document.getElementById("resultado").textContent = `❌ Incorrecto. Era: ${respuestaCorrecta}`;
+        document.getElementById("resultado").style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
